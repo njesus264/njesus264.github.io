@@ -84,11 +84,26 @@ svg{width:24px;height:24px;fill:currentColor}
 .hero>*{position:relative}.hero h1{font-size:30px}.hero span{opacity:.85;font-size:14px}
 .acts{display:flex;gap:10px}.btn.alt{background:var(--card);color:var(--fg)}
 .ib{opacity:.55;padding:6px}.ib svg{width:20px;height:20px}
+.pnl{position:fixed;inset:0;z-index:16;background:var(--bg);color:var(--fg);transform:translateY(100%);transition:transform .3s;overflow:auto;padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(24px + env(safe-area-inset-bottom,0px))}
+.pnl.open{transform:none}.pnl>*{max-width:720px;margin-left:auto;margin-right:auto}
+.pnl .qh{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.pnl h3{font-size:14px;color:var(--mut);margin-top:20px;margin-bottom:6px}
+.set{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:12px;padding:12px;margin-bottom:8px}
+.set>div{flex:1;min-width:0}.set b{display:block;font-size:15px}.set span{display:block;font-size:12px;color:var(--mut);margin-top:2px}
+.set>button{background:var(--bg);border-radius:10px;padding:8px 14px;font-size:14px;color:var(--acc)}
+#dg{white-space:pre-wrap;font-size:12px;color:var(--mut)}
+.kp{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kp div{background:var(--card);border-radius:12px;padding:12px}.kp b{display:block;font-size:22px}.kp span{font-size:12px;color:var(--mut)}
+.br{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:13px}
+.br span{flex:0 0 38%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.br i{display:block;height:8px;border-radius:4px;background:var(--acc)}.br b{margin-left:auto;color:var(--mut)}
+.hr{display:flex;align-items:flex-end;gap:2px;height:70px;margin-top:8px}.hr i{flex:1;background:var(--acc);border-radius:2px 2px 0 0;min-height:2px}
+.tabs{display:flex;gap:8px;margin:12px 0 4px}.tabs button{padding:7px 16px;border-radius:20px;background:var(--card)}.tabs button.on{background:var(--fg);color:var(--bg)}
+.hs.wrap{flex-wrap:wrap;overflow:visible}
 </style>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
-<div id="sb"><input id="q" type="search" placeholder="Artistas, canciones o álbumes" autocomplete="off" aria-label="Buscar"><button id="sync" aria-label="Sincronizar con Drive"><svg viewBox="0 0 24 24"><path d="M17.65 6.35A8 8 0 1 0 19.73 14h-2.08A6 6 0 1 1 12 6c1.66 0 3.14.69 4.22 1.78L13 11h7V4z"/></svg></button></div>
+<div id="sb"><input id="q" type="search" placeholder="Artistas, canciones o álbumes" autocomplete="off" aria-label="Buscar"><button id="stbtn" aria-label="Estadísticas"><svg viewBox="0 0 24 24"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg></button><button id="cfg" aria-label="Ajustes"><svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.5.5 0 0 0-.5-.42h-3.84a.5.5 0 0 0-.5.42l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.5.5 0 0 0-.59.22L2.74 8.87a.5.5 0 0 0 .12.64l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.5.5 0 0 0-.12.64l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.26.42.5.42h3.84c.24 0 .45-.18.5-.42l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.01-1.58zM12 15.6A3.6 3.6 0 1 1 12 8.4a3.6 3.6 0 0 1 0 7.2z"/></svg></button></div>
 <div id="st" class="sub"></div>
 <audio id="au" preload="auto"></audio><audio id="au2" preload="auto"></audio>
 <div id="app"></div>
@@ -114,6 +129,23 @@ svg{width:24px;height:24px;fill:currentColor}
 <label>Título<input id="e_t"></label><label>Artista(s)<input id="e_a" placeholder="Varios: A &amp; B o A feat. B"></label><label>Álbum<input id="e_al"></label><label>Género<input id="e_g"></label><label>URL de la carátula<input id="e_c" placeholder="https://…"></label>
 <div class="eb"><button id="e_cancel">Cancelar</button><button id="e_ok" class="btn">Guardar y verificar</button></div></div></div>
 <div id="qp"><div class="qh"><b style="font-size:18px">Cola de reproducción</b><button id="qclose" style="color:var(--acc)">Cerrar</button></div><div id="ql"></div></div>
+<div id="cp" class="pnl"><div class="qh"><b style="font-size:18px">Ajustes</b><button id="cpclose" style="color:var(--acc)">Cerrar</button></div>
+<h3>Biblioteca</h3>
+<div class="set"><div><b>Sincronizar con Drive</b><span>Busca canciones nuevas o borradas y lee sus etiquetas.</span></div><button id="sync">Sincronizar</button></div>
+<div class="set"><div><b>Releer etiquetas</b><span>Vuelve a analizar todo menos lo verificado (✓).</span></div><button id="resync">Releer</button></div>
+<h3>Identificación</h3>
+<div class="set"><div><b>Identificar con internet</b><span>Busca artista, álbum, carátula y título real (Deezer / iTunes).</span></div><button id="covers">Identificar</button></div>
+<div class="set"><div><b>Reintentar las no reconocidas</b><span>Vuelve a probar las que se intentaron sin éxito.</span></div><button id="retry">Reintentar</button></div>
+<div class="set"><div><b>Probar conexión</b><span>Comprueba si la app llega a Deezer y a iTunes.</span></div><button id="test">Probar</button></div>
+<div class="set"><div><b>Ver diagnóstico</b><span>Últimas canciones analizadas y por qué se aceptaron o no.</span></div><button id="diag">Ver</button></div>
+<pre id="dg"></pre>
+<h3>Catálogo</h3>
+<div class="set"><div><b>Exportar catálogo</b><span>Descarga musica-catalogo.json con todo lo clasificado.</span></div><button id="exp">Exportar</button></div>
+<div class="set"><div><b>Importar catálogo</b><span>Carga un musica-catalogo.json (no pisa lo verificado).</span></div><button id="impb">Importar</button></div>
+<h3>Almacenamiento</h3>
+<div class="set"><div><b>Caché de audio</b><span id="cinfo"></span></div><button id="clr">Borrar</button></div>
+<input type="file" id="imp" accept=".json,application/json" hidden></div>
+<div id="sp" class="pnl"><div class="qh"><b style="font-size:18px">Estadísticas</b><button id="spclose" style="color:var(--acc)">Cerrar</button></div><div id="sbody"></div></div>
 <script>
 // ====== CONFIGURACIÓN ======
 const CLIENT_ID="931926280383-7sdvd4hvc4vt82vhrnouc97e9m58pope.apps.googleusercontent.com";
@@ -122,9 +154,10 @@ const FOLDER_ID=""; // opcional: ID de una carpeta de Drive (solo lee sus archiv
 const SCOPE="https://www.googleapis.com/auth/drive.readonly https://www.googleapis.com/auth/drive.file",API="https://www.googleapis.com/drive/v3/files";
 const $=id=>document.getElementById(id);
 const esc=x=>String(x).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-let AP={},PF=new Set(),view=null,mq=[],oi=-1,FM={},S=[],plays={},last={},q=[],cur=null,pos=0,on=false,counted=0,url="",qs="",PL=[],T="",TE=0,busy=0;
+let AP={},HR=Array(24).fill(0),tab="home",PF=new Set(),view=null,mq=[],oi=-1,FM={},S=[],plays={},last={},q=[],cur=null,pos=0,on=false,counted=0,url="",qs="",PL=[],T="",TE=0,busy=0;
 try{plays=JSON.parse(localStorage.getItem("plays")||"{}");last=JSON.parse(localStorage.getItem("last")||"{}")}catch(e){}
-const savePl=()=>{try{localStorage.setItem("plays",JSON.stringify(plays));localStorage.setItem("last",JSON.stringify(last))}catch(e){}};
+try{const q0=JSON.parse(localStorage.getItem("hr")||"null");if(q0&&q0.length==24)HR=q0}catch(e){}
+const savePl=()=>{try{localStorage.setItem("plays",JSON.stringify(plays));localStorage.setItem("last",JSON.stringify(last));localStorage.setItem("hr",JSON.stringify(HR))}catch(e){}};
 try{const g=JSON.parse(localStorage.getItem("gt")||"{}");if(g.e>Date.now()){T=g.t;TE=g.e}}catch(e){}
 const idb=()=>new Promise((r,j)=>{const o=indexedDB.open("mm",1);o.onupgradeneeded=()=>o.result.createObjectStore("k");o.onsuccess=()=>r(o.result);o.onerror=j});
 const dbGet=async k=>{const d=await idb();return new Promise(r=>{const o=d.transaction("k").objectStore("k").get(k);o.onsuccess=()=>r(o.result);o.onerror=()=>r()})};
@@ -166,7 +199,7 @@ const fromCat=(f,e)=>({id:f.id,t:e.t,a:e.a,al:e.al,g:e.g||"",c:e.c&&e.c.startsWi
 async function loadCat(){try{
  const r=await(await dfetch(`${API}?q=${encodeURIComponent("name='musica-catalogo.json' and trashed=false")}&fields=files(id)`)).json();
  CATID=(r.files[0]||{}).id||"";
- if(CATID){const c=await(await dfetch(`${API}/${CATID}?alt=media`)).json();if(c&&c.songs){CAT={songs:c.songs,imgs:c.imgs||{}};AP={...(c.ap||{}),...AP}}}
+ if(CATID){const c=await(await dfetch(`${API}/${CATID}?alt=media`)).json();if(c&&c.songs){CAT={songs:{...c.songs,...CAT.songs},imgs:{...(c.imgs||{}),...CAT.imgs}};AP={...(c.ap||{}),...AP}}}
 }catch(e){}}
 function saveCat(){clearTimeout(svT);svT=setTimeout(async()=>{if(!hasTok())return;try{
  const body=JSON.stringify(catalog());
@@ -207,6 +240,7 @@ const ak=x=>nz(x).replace(/\s+/g," ").trim(),UNK="Artista desconocido";
 const GEN=/^(musica|music|canciones|mis canciones|songs|mp3s?|descargas|downloads|audio|mi unidad|my drive)$/;
 const chainOf=f=>{const c=[];let id=(f.parents||[])[0],g=0;while(id&&FM[id]&&g++<8){c.push(FM[id].n);id=FM[id].p}while(c.length&&GEN.test(ak(c[c.length-1])))c.pop();return c};
 const NOISE=/[\(\[]\s*(?:official|oficial|video|vídeo|audio|lyrics?|letra|hd|hq|4k|visuali[sz]er|explicit|free download|\d{2,3}\s?kbps)[^\)\]]*[\)\]]/gi;
+const tidy=x=>x.replace(/[\s\-–—|]*\b(?:official\s+(?:music\s+)?(?:video|audio)|video\s+oficial|audio\s+oficial|lyric\s+video|lyrics?|letra|hd|hq)\s*$/i,"").trim()||x;
 function guess(name,chain){
  const n=name.replace(/\.[^.]+$/,"").replace(/_/g," ").replace(NOISE," ").replace(/\bwww\.\S+/gi,"").replace(/^(?:\d{1,3}\s*[-.)]\s*|0\d\s+)/,"").replace(/\s+/g," ").trim();
  const p=n.split(/\s+[-–—]\s+/).map(x=>x.trim()).filter(x=>x&&!/^\d{1,3}$/.test(x));
@@ -214,10 +248,16 @@ function guess(name,chain){
  if(p.length>=3){a=p[0];al=p[1];t=p.slice(2).join(" - ")}else if(p.length==2){a=p[0];t=p[1]}else if(p.length==1)t=p[0];
  if(chain.length>1){if(!al&&ak(chain[0])!==ak(a))al=chain[0];if(!a)a=chain[1]}
  else if(chain.length==1){if(!a)a=chain[0];else if(!al&&ak(chain[0])!==ak(a))al=chain[0]}
- return{a,al,t:t||n||name};
+ return{a,al,t:tidy(t||n||name)};
 }
 const STR=/\s*(?:;|\bfeat\.?\s|\bft\.?\s|\bfeaturing\s|\s+x\s+|\s+vs\.?\s+)\s*/i,WK=/\s*(?:,|&|\/|\+|\by\b|\band\b)\s*/i;
 function prep(){
+ const kA=[...new Set(S.filter(s=>s.o!=="nombre"&&s.a!==UNK).map(s=>s.a))].sort((a,b)=>b.length-a.length);
+ S.forEach(s=>{if(s.o!=="nombre"||s.ok||!s.n)return;
+  const g=guess(s.n,s.ch||[]);s.t=g.t;if(s.a===UNK&&g.a)s.a=g.a;
+  if(s.a===UNK){const nt=ak(s.t),m=kA.find(a=>nt.startsWith(ak(a)+" "));if(m){s.a=m;s.t=s.t.slice(m.length).replace(/^[\s\-–—:]+/,"")||s.t}}
+  else if(!kA.some(a=>ak(a)===ak(s.a))&&kA.some(a=>ak(a)===ak(s.t)))[s.a,s.t]=[s.t,s.a];
+ });
  const known=new Set();
  S.forEach(s=>{if(s.a!==UNK&&!STR.test(s.a)&&!WK.test(s.a))known.add(ak(s.a))});
  const raw=S.map(s=>{
@@ -230,10 +270,12 @@ function prep(){
  S.forEach((s,i)=>{s.as=[...new Set(raw[i].map(x=>disp(ak(x))))]});
  const ac={};S.forEach(s=>{const k=ak(s.al);(ac[k]=ac[k]||{})[s.al]=(ac[k][s.al]||0)+1});
  S.forEach(s=>{s.al=Object.entries(ac[ak(s.al)]).sort((a,b)=>b[1]-a[1])[0][0]});
+ const cc={};S.forEach(s=>{if(s.c&&s.al!=="Sin álbum")cc[ak(s.al)+"|"+ak(s.as[0]||"")]=s.c});
+ S.forEach(s=>{if(!s.c&&s.al!=="Sin álbum"){const c=cc[ak(s.al)+"|"+ak(s.as[0]||"")];if(c)s.c=c}});
 }
 const mk=(f,t={},v=4)=>{
  const g=guess(f.name,f.chain||[]),a=t.a||g.a||UNK,al=t.al||g.al||"Sin álbum";
- return{id:f.id,t:t.t||g.t,a,al,c:t.c||"",h:hue(a+al),add:f.createdTime||"",d:t.du||0,g:t.g||"",k:!!(t.t||t.a||t.al),v,n:f.name,z:+f.size||0,o:(t.t||t.a||t.al)?"etiquetas":"nombre"};
+ return{id:f.id,t:t.t||g.t,a,al,c:t.c||"",h:hue(a+al),add:f.createdTime||"",d:t.du||0,g:t.g||"",k:!!(t.t||t.a||t.al),v,ch:f.chain||[],n:f.name,z:+f.size||0,o:(t.t||t.a||t.al)?"etiquetas":"nombre"};
 };
 function mp3dur(b,off,size){
  let i=off;const e=Math.min(b.length-4,off+4096);
@@ -284,6 +326,21 @@ const jsonp=u=>new Promise((res,rej)=>{
  s.src=u+(u.includes("?")?"&":"?")+"output=jsonp&callback="+cb;document.head.appendChild(s);
 });
 const cl=x=>nz(x||"").replace(/[\(\[].*?[\)\]]/g," ").replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim();
+const tq=(t,a)=>{let x=t.replace(/[\(\[].*?[\)\]]/g," ").replace(/\b(?:feat|ft|featuring)\b.*$/i," ").replace(/"/g,"").replace(/\s+/g," ").trim();
+ if(a&&nz(x).startsWith(nz(a)+" "))x=x.slice(a.length).replace(/^[\s\-–—:]+/,"");return x||t};
+const tsim=(a,b)=>{const x=cl(a),y=cl(b);if(!x||!y)return 0;if(x===y)return 3;
+ const A=x.split(" "),B=y.split(" "),sb=new Set(B),i=A.filter(w=>sb.has(w)).length;
+ if(x.includes(y)||y.includes(x))return 2;return i/Math.max(A.length,B.length)>=.6?1:0};
+const arm=(a,b)=>{const x=cl(a),y=cl(b);return!!(x&&y&&(x.includes(y)||y.includes(x)))};
+const fromDz=x=>({title:x.title,artist:x.artist&&x.artist.name,album:x.album&&x.album.title,cover:x.album&&(x.album.cover_big||x.album.cover_medium)||"",dur:x.duration,pic:x.artist&&x.artist.picture_big||"",genre:""});
+const fromIt=x=>({title:x.trackName,artist:x.artistName,album:x.collectionName,cover:(x.artworkUrl100||"").replace("100x100","600x600"),dur:(x.trackTimeMillis||0)/1e3,pic:"",genre:x.primaryGenreName||""});
+const pick=(cs,s,a1,t1,album)=>{let best=null,bs=0;
+ for(const x of cs){const ts=tsim(t1,x.title);if(!ts)continue;
+  let sc=ts+(a1&&arm(a1,x.artist)?2:0)+(album&&x.album&&cl(x.album)===cl(s.al)?3:0);
+  if(s.d&&x.dur){const dd=Math.abs(x.dur-s.d);sc+=dd<=4?3:dd<=12?1:-2}
+  if(sc>bs){bs=sc;best=x}}
+ return{best,bs}};
+const DG=[],dg=m=>{DG.push(m);if(DG.length>40)DG.shift()};
 async function artistPic(n){const k=ak(n);
  try{const r=((await jsonp("https://api.deezer.com/search/artist?limit=5&q="+encodeURIComponent(n))).data)||[];const m=r.find(x=>ak(x.name)===k);AP[k]=m?(m.picture_big||""):""}catch(e){return null}
  try{dbPut("ap",AP)}catch(e){}saveCat();return AP[k];
@@ -293,42 +350,70 @@ async function pics(list){if(pb)return;pb=1;let g=0;
  for(const n of list){const k=ak(n);if(k in AP||PF.has(k))continue;const r=await artistPic(n);if(r===null)PF.add(k);else g++;await new Promise(r=>setTimeout(r,250))}
  pb=0;if(g&&!qs.trim())home();
 }
+async function testConn(){
+ const o=[],T=[["Deezer","https://api.deezer.com/search?limit=3&q="+encodeURIComponent('artist:"daft punk" track:"one more time"'),d=>(d.data||[]).length],["iTunes","https://itunes.apple.com/search?entity=song&limit=3&term="+encodeURIComponent("daft punk one more time"),d=>(d.results||[]).length]];
+ $("dg").textContent="Probando…";
+ for(const[n,u,f]of T){try{const d=await jsonp(u);o.push(`${n}: responde, ${f(d)} resultados${d.error?" (error: "+JSON.stringify(d.error)+")":""}`)}catch(e){o.push(`${n}: NO responde (${e.message})`)}}
+ $("dg").textContent=o.join("\n");
+}
 async function identify(){
  if(busy)return;busy=1;
- const need=S.filter(s=>!s.cz&&!s.ok&&(!s.c||s.a===UNK||s.al==="Sin álbum")),G={};let n=0,ok=0,bad=0;
+ const need=S.filter(s=>!s.cz&&!s.ok&&(!s.c||s.a===UNK||s.al==="Sin álbum")),G={};let n=0,ok=0,bad=0,reqs=0,errs=0;
  for(const s of need){
   st(`Identificando… ${++n}/${need.length} (${ok} reconocidas)`);
   const album=s.a!==UNK&&s.al!=="Sin álbum",key=ak(s.a)+"|"+ak(s.al);
   if(album&&key in G){if(G[key]&&!s.c)s.c=G[key];s.cz=1;continue}
-  try{
-   const a1=s.a!==UNK?s.a.split(STR)[0].split(WK)[0].replace(/"/g,""):"",t1=s.t.replace(/[\(\[].*?[\)\]]/g,"").replace(/"/g,"").trim();
-   let r=((await jsonp("https://api.deezer.com/search?limit=10&q="+encodeURIComponent(a1?`artist:"${a1}" track:"${t1}"`:t1))).data)||[];
-   if(!r.length)r=((await jsonp("https://api.deezer.com/search?limit=10&q="+encodeURIComponent(a1+" "+t1))).data)||[];
-   let best=null,bs=0;
-   for(const x of r){
-    let sc=0;const tn=cl(x.title),sn=cl(s.t);
-    if(tn===sn)sc+=3;else if(tn&&sn&&(tn.includes(sn)||sn.includes(tn)))sc+=2;else continue;
-    if(a1&&cl(x.artist&&x.artist.name).includes(cl(a1)))sc+=2;
-    if(album&&x.album&&cl(x.album.title)===cl(s.al))sc+=3;
-    if(s.d&&x.duration){const dd=Math.abs(x.duration-s.d);sc+=dd<=4?3:dd<=12?1:-2}
-    if(sc>bs){bs=sc;best=x}
-   }
-   const al=(best&&best.album)||{},ar=(best&&best.artist)||{},cov=al.cover_big||al.cover_medium||"";
-   if(best&&bs>=4){
-    if(!s.c&&cov)s.c=cov;if(s.a===UNK&&ar.name)s.a=ar.name;if(s.al==="Sin álbum"&&al.title)s.al=al.title;
-    if(s.o!=="etiquetas"&&best.title)s.t=best.title;
-    if(ar.name&&ar.picture_big&&!AP[ak(ar.name)])AP[ak(ar.name)]=ar.picture_big;
-    s.k=true;if(s.o!=="etiquetas")s.o="internet";ok++;
-   }
-   if(album)G[key]=best&&bs>=4?cov:"";
-   s.cz=1;bad=0;
-  }catch(e){if(++bad>=5)break}
+  const a1=s.a!==UNK?s.a.split(STR)[0].split(WK)[0].replace(/"/g,""):"",t1=tq(s.t,a1),both=(a1+" "+t1).trim();
+  const V=[];if(a1)V.push(["dz","https://api.deezer.com/search?limit=10&q="+encodeURIComponent(`artist:"${a1}" track:"${t1}"`)]);
+  V.push(["dz","https://api.deezer.com/search?limit=10&q="+encodeURIComponent(both)],["it","https://itunes.apple.com/search?entity=song&limit=10&term="+encodeURIComponent(both)]);
+  let best=null,bs=0,nc=0,er=0;
+  for(const[p,u]of V){
+   reqs++;
+   try{const d=await jsonp(u),r=p=="dz"?(d.data||[]).map(fromDz):(d.results||[]).map(fromIt);nc+=r.length;
+    const k=pick(r,s,a1,t1,album);if(k.bs>bs){bs=k.bs;best=k.best}}catch(e){er++;errs++}
+   if(bs>=4)break;await new Promise(r=>setTimeout(r,120));
+  }
+  dg(`${s.a} | ${t1} → ${best?`${best.artist} - ${best.title} (puntos ${bs}${bs>=4?", aceptada":", rechazada"})`:"sin coincidencias"} [${nc} candidatos, ${er} fallos de red]`);
+  if(er===V.length){if(++bad>=5)break;continue}
+  bad=0;
+  if(best&&bs>=4){
+   if(!s.c&&best.cover)s.c=best.cover;if(s.a===UNK&&best.artist)s.a=best.artist;if(s.al==="Sin álbum"&&best.album)s.al=best.album;
+   if(s.o!=="etiquetas"&&best.title)s.t=best.title;if(!s.g&&best.genre)s.g=best.genre;
+   if(best.artist&&best.pic&&!AP[ak(best.artist)])AP[ak(best.artist)]=best.pic;
+   s.k=true;if(s.o!=="etiquetas")s.o="internet";ok++;
+  }
+  if(album)G[key]=best&&bs>=4?best.cover:"";
+  s.cz=1;
   if(n%20==0){prep();try{await dbPut("lib",S);await dbPut("ap",AP)}catch(e){}saveCat()}
-  await new Promise(r=>setTimeout(r,250));
+  await new Promise(r=>setTimeout(r,150));
  }
  prep();try{await dbPut("lib",S);await dbPut("ap",AP)}catch(e){}
- st(bad>=5?"No se pudo conectar con Deezer (carátulas). Inténtalo más tarde.":need.length?`Reconocidas ${ok} de ${need.length} canciones`:"No hay nada pendiente de identificar");
+ st(bad>=5||(reqs&&errs==reqs)?"No hay conexión con Deezer/iTunes. Prueba Ajustes → Probar conexión.":need.length?`Reconocidas ${ok} de ${need.length} canciones`+(errs?` · ${errs} peticiones fallidas`:"")+" · detalles en Ajustes → Ver diagnóstico":"No hay nada pendiente de identificar");
  home();saveCat();busy=0;
+}
+const applyCat=()=>{let n=0;S.forEach(s=>{const e=CAT.songs[s.n+"|"+s.z];if(!e||(s.ok&&!e.ok))return;
+ Object.assign(s,{t:e.t,a:e.a,al:e.al,g:e.g||"",c:e.c&&e.c.startsWith("i:")?(CAT.imgs[e.c.slice(2)]||s.c||""):(e.c||s.c||""),d:e.d||s.d,k:!!e.k,ok:e.ok,cz:e.y,o:e.o});n++});return n};
+$("imp").addEventListener("change",async e=>{const f=e.target.files[0];e.target.value="";if(!f)return;
+ try{const c=JSON.parse(await f.text());if(!c.songs)throw new Error("no parece un catálogo");
+  Object.entries(c.songs).forEach(([k,v])=>{const o=CAT.songs[k];if(!(o&&o.ok&&!v.ok))CAT.songs[k]=v});
+  Object.assign(CAT.imgs,c.imgs||{});AP={...(c.ap||{}),...AP};
+  const n=applyCat();prep();try{await dbPut("lib",S);await dbPut("ap",AP)}catch(e){}saveCat();home();
+  $("dg").textContent=`Catálogo importado: ${Object.keys(c.songs).length} entradas, ${n} canciones actualizadas.`;
+ }catch(err){$("dg").textContent="No se pudo importar: "+err.message}});
+const cpx=()=>$("cp").classList.remove("open");
+function openCfg(){$("cinfo").textContent=`${lru.length} canciones · ${(lru.reduce((a,x)=>a+x.z,0)/1048576).toFixed(0)} MB (máx. ${CACHE_MB} MB)`;$("dg").textContent="";$("cp").classList.add("open")}
+async function clearCache(){try{await caches.delete("mm-audio")}catch(e){}lru=[];saveLru();$("cinfo").textContent="0 canciones";$("dg").textContent="Caché de audio borrada."}
+function renderStats(){
+ const pl=s=>plays[s.id]||0,tp=S.reduce((a,s)=>a+pl(s),0),secs=S.reduce((a,s)=>a+pl(s)*(s.d||0),0),tot=S.reduce((a,s)=>a+(s.d||0),0);
+ const fh=x=>x>=3600?(x/3600).toFixed(1)+" h":Math.round(x/60)+" min";
+ const agg=f=>{const m={};S.forEach(s=>f(s).forEach(k=>m[k]=(m[k]||0)+pl(s)));return Object.entries(m).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]).slice(0,5)};
+ const bars=a=>{const mx=Math.max(1,...a.map(x=>x[1]));return a.length?a.map(x=>`<div class="br"><span>${esc(x[0])}</span><i style="width:${Math.max(4,x[1]/mx*45)}%"></i><b>${x[1]}</b></div>`).join(""):`<p class="sub">Aún sin datos: escucha algunas canciones.</p>`};
+ const ts=S.filter(pl).sort((a,b)=>pl(b)-pl(a)).slice(0,5).map(s=>[s.t+" — "+s.a,pl(s)]),mh=Math.max(1,...HR);
+ const kp=(b,l)=>`<div><b>${b}</b><span>${l}</span></div>`;
+ $("sbody").innerHTML=`<div class="kp">${kp(S.length,"canciones")}${kp(new Set(S.flatMap(s=>s.as)).size,"artistas")}${kp(new Set(S.map(s=>s.al).filter(x=>x!=="Sin álbum")).size,"álbumes")}${kp(fh(tot),"de música")}${kp(tp,"reproducciones")}${kp(fh(secs),"escuchado (estimado)")}${kp(S.length?Math.round(S.filter(s=>s.c).length/S.length*100)+"%":"0%","con carátula")}${kp(S.filter(s=>s.ok).length,"verificadas ✓")}</div>
+ <h3>Artistas más escuchados</h3>${bars(agg(s=>s.as))}<h3>Canciones más escuchadas</h3>${bars(ts)}<h3>Álbumes más escuchados</h3>${bars(agg(s=>s.al==="Sin álbum"?[]:[s.al]))}
+ <h3>Hora del día en la que escuchas</h3><div class="hr">${HR.map((x,i)=>`<i style="height:${Math.max(3,x/mh*100)}%" title="${i}h: ${x}"></i>`).join("")}</div><p class="sub">0 h → 23 h (se empieza a registrar desde esta versión)</p>
+ <h3>Por descubrir</h3><p class="sub">${S.filter(s=>!pl(s)).length} canciones aún sin escuchar.</p>`;
 }
 // ---- Playlists y vistas ----
 const lists=()=>{
@@ -367,18 +452,30 @@ function results(){
  const card=(k,x,f,l)=>`<div class="it" data-${k}="${esc(x)}">${k=="ar"?acv(x):cv(S.find(f))}<b>${esc(x)}</b><span class="sub">${l}</span></div>`;
  $("app").innerHTML=so.length?`${ar.length?`<h2>Artistas</h2><div class="hs">${ar.slice(0,12).map(x=>card("ar",x,s=>s.as.includes(x),"Artista")).join("")}</div>`:""}${al.length?`<h2>Álbumes</h2><div class="hs">${al.slice(0,12).map(x=>card("al",x,s=>s.al===x,"Álbum")).join("")}</div>`:""}<h2>Canciones</h2>${so.map(rowH).join("")}`:`<p class="sub" style="margin-top:30px">Sin resultados para «${esc(qs)}»</p>`;pics(ar.slice(0,12));
 }
+const tabs=()=>`<div class="tabs"><button data-tab="home" class="${tab=="home"?"on":""}">Inicio</button><button data-tab="explore" class="${tab=="explore"?"on":""}">Explorar</button></div>`;
 function home(){
  if(view&&!qs.trim())return detail();
  if(qs.trim())return results();
  if(!S.length){$("app").innerHTML=`<h1>Tu música en Drive</h1><p class="sub" style="margin:8px 0 18px">Conecta tu cuenta de Google para leer tus archivos de audio.</p><button class="btn" id="conn">Conectar con Google Drive</button>`;return}
- const L1=lists(),n1=L1.length;PL=[...L1,...colls()];const h=new Date().getHours(),hi=h<6?"Buenas noches":h<13?"Buenos días":h<21?"Buenas tardes":"Buenas noches";
- const bp=S.filter(s=>plays[s.id]).sort((a,b)=>plays[b.id]-plays[a.id]).slice(0,10);const cn={};S.forEach(s=>s.as.forEach(a=>cn[a]=(cn[a]||0)+1));const arts=Object.keys(cn).sort((a,b)=>cn[b]-cn[a]).slice(0,12);
- $("app").innerHTML=`<h1>${hi}</h1><p class="sub">${S.length} canciones en tu Drive (${lru.length} guardadas en el dispositivo) · <button id="resync" style="display:inline;padding:0;text-decoration:underline;color:inherit;font:inherit">Releer etiquetas</button> · <button id="covers" style="display:inline;padding:0;text-decoration:underline;color:inherit;font:inherit">Identificar con internet</button> · <button id="exp" style="display:inline;padding:0;text-decoration:underline;color:inherit;font:inherit">Exportar catálogo</button></p>
- <h2>Tus playlists</h2><div class="grid">${gr(0,n1)}</div>${PL.length>n1?`<h2>Clasificadas automáticamente</h2><div class="grid">${gr(n1)}</div>`:""}
- ${arts.length?`<h2>Artistas</h2><div class="hs">${arts.map(x=>`<div class="it" data-ar="${esc(x)}">${acv(x)}<b>${esc(x)}</b><span class="sub">Artista</span></div>`).join("")}</div>`:""}${bp.length?`<h2>Más escuchado</h2><div class="hs">${bp.map(s=>`<div class="it" data-s="${esc(s.id)}">${cv(s)}<b>${esc(s.t)}</b><span class="sub">${esc(s.a)}</span></div>`).join("")}</div>`:""}
- <h2>Todas las canciones</h2>${[...S].sort((a,b)=>a.t.localeCompare(b.t)).slice(0,150).map(rowH).join("")}`;pics(arts);
+ const L1=lists().slice(0,6),n1=L1.length;PL=[...L1,...colls()];
+ const cn={},ca={};S.forEach(s=>{s.as.forEach(a=>cn[a]=(cn[a]||0)+1);if(s.al!=="Sin álbum")ca[s.al]=s});
+ const arts=Object.keys(cn).sort((a,b)=>cn[b]-cn[a]);
+ const it=(k,x,v)=>`<div class="it" data-${k}="${esc(x)}">${k=="ar"?acv(x):cv(v)}<b>${esc(x)}</b><span class="sub">${k=="ar"?"Artista":"Álbum"}</span></div>`;
+ if(tab=="explore"){
+  $("app").innerHTML=`${tabs()}${PL.length>n1?`<h2>Colecciones automáticas</h2><div class="grid">${gr(n1)}</div>`:""}
+  <h2>Artistas</h2><div class="hs wrap">${arts.slice(0,60).map(x=>it("ar",x)).join("")}</div>
+  <h2>Álbumes</h2><div class="hs wrap">${Object.keys(ca).sort().slice(0,60).map(x=>it("al",x,ca[x])).join("")}</div>
+  <p class="sub" style="margin-top:20px">Para ver canciones, entra en un artista o álbum, o usa el buscador.</p>`;
+  pics(arts.slice(0,60));return;
+ }
+ const h=new Date().getHours(),hi=h<6?"Buenas noches":h<13?"Buenos días":h<21?"Buenas tardes":"Buenas noches";
+ const bp=S.filter(s=>plays[s.id]).sort((a,b)=>plays[b.id]-plays[a.id]).slice(0,10);
+ $("app").innerHTML=`${tabs()}<h1 style="margin-top:14px">${hi}</h1><p class="sub">${S.length} canciones · ${lru.length} guardadas en el dispositivo</p>
+ <h2>Tus playlists</h2><div class="grid">${gr(0,n1)}</div>
+ <h2>Artistas</h2><div class="hs">${arts.slice(0,12).map(x=>it("ar",x)).join("")}</div>
+ ${bp.length?`<h2>Más escuchado</h2><div class="hs">${bp.map(s=>`<div class="it" data-s="${esc(s.id)}">${cv(s)}<b>${esc(s.t)}</b><span class="sub">${esc(s.a)}</span></div>`).join("")}</div>`:""}`;
+ pics(arts.slice(0,12));
 }
-
 // ---- Caché de audio: no volver a descargar lo ya escuchado ----
 const CACHE_MB=600,hasTok=()=>T&&Date.now()<TE-6e4;let lru=[];try{lru=JSON.parse(localStorage.getItem("lru")||"[]")}catch(e){}
 const saveLru=()=>{try{localStorage.setItem("lru",JSON.stringify(lru))}catch(e){}},ckey=id=>new Request("https://cache.local/a/"+id);
@@ -469,7 +566,7 @@ function nx(d=1,auto=0){const id=nextId(d,auto);if(id===null){A().pause();return
 const toggle=()=>{const a=A();a.paused?a.play():a.pause()};
 AU.forEach(a=>{
  a.ontimeupdate=()=>{if(a!==A())return;pos=a.currentTime;tick();
-  if(!counted&&pos>Math.min(30,(a.duration||60)/2)){counted=1;plays[cur]=(plays[cur]||0)+1;last[cur]=Date.now();savePl()}
+  if(!counted&&pos>Math.min(30,(a.duration||60)/2)){counted=1;plays[cur]=(plays[cur]||0)+1;last[cur]=Date.now();HR[new Date().getHours()]++;savePl()}
   if(xf&&!xfs&&loop!=2&&a.duration>XT*2&&a.duration-pos<=XT)fade()};
  a.onloadedmetadata=()=>{if(a!==A())return;const s=cs();if(s)s.d=a.duration;tick()};
  a.onended=()=>{if(a===A())nx(1,1)};
@@ -477,17 +574,18 @@ AU.forEach(a=>{
 });
 if("mediaSession" in navigator){[["play",()=>A().play()],["pause",()=>A().pause()],["nexttrack",()=>nx()],["previoustrack",()=>nx(-1)],["seekto",d=>{A().currentTime=d.seekTime}]].forEach(([n,f])=>{try{navigator.mediaSession.setActionHandler(n,f)}catch(e){}})}
 document.addEventListener("click",e=>{
- const t=e.target.closest("[data-pl],[data-s],[data-ar],[data-al],[data-aq],[data-ed],[data-qp],[data-qx],#back,#pv,#sv,#qbtn,#qclose,#sync,#conn,#resync,#covers,#exp,#edit,#e_ok,#e_cancel,#shuf,#loop,#xf,#mpp,#mnx,#mini,#close,#pp,#prev,#next,#trk");if(!t)return;
+ const t=e.target.closest("[data-pl],[data-s],[data-ar],[data-al],[data-aq],[data-ed],[data-qp],[data-qx],[data-tab],#cfg,#cpclose,#stbtn,#spclose,#retry,#test,#diag,#impb,#clr,#back,#pv,#sv,#qbtn,#qclose,#sync,#conn,#resync,#covers,#exp,#edit,#e_ok,#e_cancel,#shuf,#loop,#xf,#mpp,#mnx,#mini,#close,#pp,#prev,#next,#trk");if(!t)return;
  const d=t.dataset;
  if(d.pl!==undefined){const l=PL[d.pl].s.map(s=>s.id);play(l[0],l);return}
  if(d.ar!==undefined||d.al!==undefined){view={k:d.ar!==undefined?"artist":"album",n:d.ar!==undefined?d.ar:d.al};qs="";$("q").value="";home();window.scrollTo(0,0);return}
  if(d.s!==undefined){play(d.s,ctx());return}
+ if(d.tab!==undefined){tab=d.tab;view=null;home();window.scrollTo(0,0);return}
  if(d.aq!==undefined){addQ(d.aq);return}
  if(d.ed!==undefined){openEd(d.ed);return}
  if(d.qp!==undefined){play(d.qp);return}
  if(d.qx!==undefined){if(d.m=="1"){const k=mq.indexOf(d.qx);if(k>=0)mq.splice(k,1)}else{ord=ord.filter(x=>x!==d.qx);q=q.filter(x=>x!==d.qx);const j=ord.indexOf(cur);if(j>=0)oi=j}preload();renderQ();return}
  switch(t.id){
-  case"sync":case"conn":sync();break;case"resync":sync(true);break;case"covers":identify();break;
+  case"sync":case"conn":cpx();sync();break;case"resync":cpx();sync(true);break;case"covers":cpx();identify();break;case"retry":cpx();S.forEach(s=>{if(!s.ok)s.cz=0});identify();break;case"test":testConn();break;case"diag":$("dg").textContent=DG.join("\n")||"Sin registros todavía. Ejecuta primero Identificar con internet.";break;case"impb":$("imp").click();break;case"clr":clearCache();break;case"cfg":openCfg();break;case"cpclose":cpx();break;case"stbtn":renderStats();$("sp").classList.add("open");break;case"spclose":$("sp").classList.remove("open");break;
   case"edit":openEd();break;case"back":view=null;home();break;case"pv":{const l=vlist().map(s=>s.id);if(l.length)play(l[0],l);break}case"sv":{const l=vlist().map(s=>s.id);if(l.length){shuf=true;saveC();play(l[0],l)}break}case"qbtn":qopen=true;renderQ();$("qp").classList.add("open");break;case"qclose":qopen=false;$("qp").classList.remove("open");break;case"e_ok":saveEd();break;case"e_cancel":$("ed").hidden=true;break;
   case"exp":{const b=new Blob([JSON.stringify(catalog(),null,1)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="musica-catalogo.json";a.click();break}
   case"shuf":shuf=!shuf;ord=mkOrd();saveC();ui();preload();break;
